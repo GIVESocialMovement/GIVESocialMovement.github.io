@@ -1,0 +1,17 @@
+title: GIVE Engineering
+description: Technical journey of building GIVEasia
+twitter_username: GIVEasia
+show_downloads: false
+google_analytics:
+theme: jekyll-theme-cayman
+
+github:
+  is_project_page: false
+
+excerpt_separator: "<!---excerpt--->"
+
+paginate: 50
+
+plugins:
+  - jekyll-paginate
+
