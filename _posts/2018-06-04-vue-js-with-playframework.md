@@ -56,6 +56,6 @@ You might notice two odd things in the code above:
 * We have to encode JSON in Base64 to prevent <a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)">XSS</a>
 * `GreetingForm.default` comes from the fact that sbt-vuefy uses the camel case of the filename as the exported module. The camel case conversion happens <a href="https://github.com/GIVESocialMovement/sbt-vuefy/blob/master/src/main/resources/sbt-vuefy-plugin.js#L2">here</a>. It would be great if we can reduce this kind of verbosity.
 
-We have been using <a href="https://github.com/GIVESocialMovement/sbt-vuefy">sbt-vuefy</a> for a few months now, and it has been working well.
+We have been using <a href="https://github.com/GIVESocialMovement/sbt-vuefy">sbt-vuefy</a> on <a href="https://give.asia">GIVE.asia</a> for some time now, and it has been working well.
 Check out <a href="https://github.com/GIVESocialMovement/sbt-vuefy">sbt-vuefy</a> if it might work for you,
-and please let us (<a href="https://twitter.com/tanin">@tanin</a>) know if you encounter any problem!
+and please let us (<a href="https://twitter.com/tanin">@tanin</a>) know if you encounter any problem or have any suggestion!
