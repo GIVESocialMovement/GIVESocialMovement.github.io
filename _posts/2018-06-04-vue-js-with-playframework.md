@@ -18,7 +18,7 @@ and requires a lot more Javascript code.
 
 We've chosen Vue.js because we like <a href="https://vuejs.org/v2/guide/single-file-components.html">Vue's Single File Components</a>, especially how we can encapsulate behaviour and appearance in a custom tag.
 
-At this point, you might think "Well, other JS frameworks support componentization too". And that's true. While <a href="https://reactjs.org">React.js</a> seems somewhat equivalent to Vue.js, JSX isn't aesthetically pleasing. <a href="https://www.polymer-project.org">Polymer.js 2.0</a>, which we initially used, just wasn't good. But more on that later in a separate blog post...
+At this point, you might think "Well, other JS frameworks support componentization too". And that's true. While <a href="https://reactjs.org">React.js</a> seems somewhat equivalent to Vue.js, JSX isn't aesthetically pleasing. This <a href="https://www.reddit.com/r/javascript/comments/8o781t/vuejs_or_react_which_you_would_chose_and_why/e01qn55/">reddit comment</a> explains the difference between Vue.js and React.js very well. <a href="https://www.polymer-project.org">Polymer.js 2.0</a>, which we initially used, just wasn't good. But more on that later in a separate blog post...
 
 Back to <a href="https://github.com/GIVESocialMovement/sbt-vuefy">sbt-vuefy</a>, we integrate the Vue compilation using sbt-web's `syncIncremental`; this means every time the code is changed, the code will be re-compiled. The plugin also tracks dependencies within a component (e.g. `import OurButton from './common/our-button.vue'` <a href="https://github.com/GIVESocialMovement/sbt-vuefy/blob/master/test-play-project/app/assets/vue/components/greeting-form.vue">here</a>), and the recompilation will happen on necessary files.
 
