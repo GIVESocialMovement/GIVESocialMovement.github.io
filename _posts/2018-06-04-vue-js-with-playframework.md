@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Vue.js with Playframework"
-date: 2018-04-06 16:24:00 -08:00
+date: 2018-06-04 16:24:00 -08:00
 author:
   name: "@tanin"
   url: https://twitter.com/tanin
