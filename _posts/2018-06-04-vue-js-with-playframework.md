@@ -58,4 +58,4 @@ Now you might notice two odd things in the code above:
 
 We have been using `sbt-vuefy` for a few months now, and it has been working well.
 Check out <a href="https://github.com/GIVESocialMovement/sbt-vuefy">sbt-vuefy</a> if it might work for you,
-and please let us (<a href="https://twitter.com/tanin">@tanin</a>) know if it helps solve your problem like it solves ours!
+and please let us (<a href="https://twitter.com/tanin">@tanin</a>) know if you encounter any problem!
