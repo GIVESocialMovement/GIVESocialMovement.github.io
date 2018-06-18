@@ -7,7 +7,9 @@ author:
   url: https://twitter.com/tanin
 ---
 
-Playframework has its own internationalization mechanism, which use `conf/messages` for storing translations. The mechanism is great for server-side rendering. On Vue's side, there are multiple libraries for internationalization in Vue.js, and it seems [vue-i18n](https://github.com/kazupon/vue-i18n) is the winner. But the remaining question is: How do we use it with Vue.js?
+Playframework has its own internationalization mechanism, which use `conf/messages` for storing translations. The mechanism is great for server-side rendering. On Vue's side, there are multiple libraries for internationalization in Vue.js, and it seems [vue-i18n](https://github.com/kazupon/vue-i18n) is the winner. 
+
+Now the question is: How do we use it with Vue.js?
 
 It would be great if (1) [vue-i18n](https://github.com/kazupon/vue-i18n) uses the Playframework's `conf/messages` and (2) the internationalization works well with local development (e.g. hot-reloading).
 
