@@ -4,6 +4,7 @@ description: Onward and upward
 show_downloads: false
 google_analytics: UA-31488943-6
 theme: jekyll-theme-minimal
+future: true
 
 github:
   is_project_page: false
