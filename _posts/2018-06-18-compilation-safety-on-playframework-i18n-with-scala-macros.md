@@ -7,9 +7,9 @@ author:
   url: https://twitter.com/tanin
 ---
 
-[Playframework's i18n mechanism](https://www.playframework.com/documentation/2.6.x/ScalaI18N) isn't very safe. A translation is defined in `messages`, for example, `page.index.hello = Hello {0}`. Then, somewhere in a template, we invoke `@request.messages("page.index.helllo", "Tanin")`.
+[Playframework's i18n mechanism](https://www.playframework.com/documentation/2.6.x/ScalaI18N) isn't very safe. Well, it's not as safe as I'd like  as a person who prefers Scala because of its safeness. A translation is defined in `messages`, for example, `page.index.hello = Hello {0}`. Then, somewhere in a template, we invoke `@request.messages("page.index.helllo", "Tanin")`.
 
-With the above way of doing things, we can easily make a few mistakes. We could misspell the key. We could forget to invoke the method with an appropriate number of arguments. To make the matter worse, Playframework will compile it successfully. You will only see the mistake(s) when you render the page. Your message will look like `page.index.helllo` (did you notice the three `l`s?) because that misspelled key isn't defined. This becomes more problematic when there are thousands of translations in a project.
+With the above way of doing things, we can easily make a few mistakes. We could misspell the key. We could forget to invoke the method with an appropriate number of arguments. To make the matter worse, Playframework will compile it successfully. You will only see the mistake(s) when you render the page. Your message will look like `page.index.helllo` (did you notice the three `l`s?) because the misspelled key isn't defined. This becomes more problematic when there are thousands of translations in a project.
 
 I made the exact mistake, and I've realised afterwards that there is a way to catch this kind of mistakes with Scala Macros!
 
