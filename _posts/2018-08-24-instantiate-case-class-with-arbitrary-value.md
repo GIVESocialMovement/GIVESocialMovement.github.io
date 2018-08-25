@@ -23,10 +23,10 @@ case class User(name: String, createdAt: com.twitter.util.Time)
 
 implicit val implicitTime = Arbitrary.apply(Gen.const(Time.now))
 
-val user = implicitly[Arbitrary[User]].arbitrary.sample.get
+val user = arbitrary[User].sample.get
 ```
 
-Note that you might think we can encapsulate these lines in a method. We can't because scalacheck-shapeless uses Macros expansion on the code here. Besides, using Macros comes with its own problem which will be explained in the next paragraph. 
+Note that you might think we can encapsulate these lines in a method. We can't because scalacheck-shapeless requires the type to be known (because of Macro expansion); We can encapsulate these lines using Macros though. In any case, using Macros comes with its own problem which will be explained in the next paragraph. 
 
 Then, I turned to Macros for generating a case class instance with arbitrary values. However, the main problem with using Macros is that our compile time (in `sbt test:compile`) takes 2x longer (from 2-3 minutes to 6 minutes). Ouch. Besides, Macros, whose advantage is to provide compilation safety, isn't really needed here because the generation is only used in tests. We would have caught an error fairly quickly anyway if there is one.
 
