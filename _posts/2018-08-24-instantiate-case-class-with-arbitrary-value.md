@@ -101,6 +101,7 @@ Using reflection is pretty satisfactory because the compile time is still fast a
 
 * You can override the values you care about using the `.copy` method of a case class.
 * You can customise the generated values in any way you'd like. For example, if the field has the word `email` in it, then we generate a valid random email.
+* You can easily extend it to support some other types that are not case classes.
 * All values are uniquely generated. This is good because using duplicated values might not catch a certain kind of bugs (e.g. passing wrong values to wrong parameters).
 * It works with Enum. It'll always choose the first enum value.
 
