@@ -14,7 +14,7 @@ More than often, I don't care much what the values are. I just want sensible val
 
 Scalacheck-shapeless works but isn't a good fit. The main problem is that scalacheck-shapeless generates an extremely wild value. For example, a generated string might be empty or use Japanese characters. A generated integer might be a large negative number. Because our tests aim to verify normal use cases of our application. We don't want to perform some sort of fuzzing tests here. We ended up having to define some values in our case class instances (using `.copy`) to avoid flaky tests. So, the code was still a bit verbose.
 
-Moreover, Scalacheck-shapeless is a little bit too verbose than my liking, especially when we have a special type, say, `com.twitter.util.Time`, we need to bring into scope an implicit Arbitrary for `com.twitter.util.Time`. For example:
+Moreover, Scalacheck-shapeless is a little bit too verbose for my taste, especially when we have a special type, say, `com.twitter.util.Time`, we need to bring into scope an implicit Arbitrary for `com.twitter.util.Time`. For example:
 
 ```
 // import statements are omitted.
@@ -26,7 +26,7 @@ implicit val implicitTime = Arbitrary.apply(Gen.const(Time.now))
 val user = arbitrary[User].sample.get
 ```
 
-Note that you might think we can encapsulate these lines in a method. We can't because scalacheck-shapeless requires the type to be known (because of Macro expansion); We can encapsulate these lines using Macros though. In any case, using Macros comes with its own problem which will be explained in the next paragraph. 
+Note that you might think we can encapsulate these lines in a method. We can't because scalacheck-shapeless requires the type to be known (because of Macro expansion); We can encapsulate these lines using Macros though. In any case, using Macros comes with its own burden which will be explained in the next paragraph. 
 
 Then, I turned to Macros for generating a case class instance with arbitrary values. However, the main problem with using Macros is that our compile time (in `sbt test:compile`) takes 2x longer (from 2-3 minutes to 6 minutes). Ouch. Besides, Macros, whose advantage is to provide compilation safety, isn't really needed here because the generation is only used in tests. We would have caught an error fairly quickly anyway if there is one.
 
