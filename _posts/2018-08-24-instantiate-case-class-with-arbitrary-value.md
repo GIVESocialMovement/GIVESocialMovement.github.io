@@ -105,5 +105,5 @@ Using reflection is pretty satisfactory because the compile time is still fast a
 * All values are uniquely generated. This is good because using duplicated values might not catch a certain kind of bugs (e.g. passing wrong values to wrong parameters).
 * It works with Enum. It'll always choose the first enum value.
 
-I hope this code will be as useful for your codebase as well.
+I hope this code will be useful for your codebase!
 
