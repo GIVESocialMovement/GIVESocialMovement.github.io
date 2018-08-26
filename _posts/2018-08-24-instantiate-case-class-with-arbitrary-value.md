@@ -33,6 +33,10 @@ Then, I turned to Macros for generating a case class instance with arbitrary val
 Eventually, I've decided to go with the good old Scala/Java reflection for instantiating case classes with arbitrary values. Here's what the code looks like:
 
 ```
+import scala.reflect.api
+import scala.reflect.api.{TypeCreator, Universe}
+import scala.reflect.runtime.universe._
+
 object Maker {
   val mirror = runtimeMirror(getClass.getClassLoader)
 
