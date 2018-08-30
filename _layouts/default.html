@@ -12,6 +12,8 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
     <meta content="{{ site.logo | absolute_url }}" property="og:image">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
   </head>
   <body>
     <div class="wrapper">
@@ -21,6 +23,9 @@
         </a>
 
         <p>{{ site.description | default: site.github.project_tagline }}</p>
+        <p>
+          <a class="github-button" href="https://github.com/GIVESocialMovement/GIVESocialMovement.github.io" data-size="large" data-show-count="true" aria-label="Star GIVESocialMovement/GIVESocialMovement.github.io on GitHub">Star</a>
+        </p>
       </header>
       <section>
 
@@ -28,6 +33,10 @@
 
       </section>
       <footer>
+        <p>
+          If you have a question or want to have a discussion, please feel free to open an issue on our Github repo. <br/><br/>
+          <a class="github-button" href="https://github.com/GIVESocialMovement/GIVESocialMovement.github.io/issues" data-size="large" data-show-count="true" aria-label="Issue GIVESocialMovement/GIVESocialMovement.github.io on GitHub">Issue</a>
+        </p>
       </footer>
     </div>
     <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
