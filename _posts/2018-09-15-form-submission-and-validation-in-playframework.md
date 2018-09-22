@@ -105,7 +105,11 @@ Now let's look at the view side. Let's assume we use Vue. Our view looks like be
 
 In Vue, we don't do anything with `params`. We simply use `params` in textboxes. Notice that the default values are set from our controller. For example, `59999L` is converted to `599.99` when we invoke `PRODUCT_FORM.fill(Product("iphone", 59999L)).data`, and `599.99` is what users see.
 
-We like this approach because there is a clear boundary. Our view operates on JSON; Our controller immediately converts JSON to `Product` and only operates on `Product`. The validation and transformation logic is defined in one place, which is in `PRODUCT_FORM`.
+We like this approach because:
+
+* There is a clear boundary. Our view operates on JSON; Our controller immediately converts JSON to `Product` and only operates on `Product`.
+* The structure of `params` is defined in one place, which is in `PRODUCT_FORM`.
+* The validation and transformation logic is also defined in one place, which is in `PRODUCT_FORM`.
 
 We had been happy with this approach and `play.api.data.Form` ... until we started using a `Seq` in our form like below:
 
