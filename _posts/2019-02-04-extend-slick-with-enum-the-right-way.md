@@ -84,13 +84,16 @@ object Country {
 We can simply extends `slick.jdbc.PostgresProfile` and override the `api` member as shown below:
 
 ```
-object OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
+trait OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
   class API extends super.API {
     implicit val countryMapper: BaseColumnType[Country.Value] = MappedJdbcType.base[Country.Value, String](_.toString, Country.withName)
   }
 
   override val api: API = new API
 }
+
+// Please note that we need to make a trait first. I'm not exactly sure why. If not, we would encounter an AbstractMethodError.
+object OurExtendedPostgresProfile extends OurExtendedPostgresProfile
 ```
 
 Then, in places where we import `slick.jdbc.PostgresProfile.api._`, we instead import `OurExtendedPostgresProfile`. And that's it.
