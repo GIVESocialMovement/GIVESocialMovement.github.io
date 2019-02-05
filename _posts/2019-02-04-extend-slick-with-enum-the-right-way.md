@@ -157,6 +157,6 @@ object OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
 }
 ```
 
-Walla, now you can easily add a new Enum with minimal code.
+Now you can easily add a new Enum with minimal code.
 
 PS. We're always looking for a better technique. If you have one, please open an issue in our github repo. Thank you!
