@@ -46,7 +46,7 @@ There are two issues with the code above:
 1. `scala.Enumeration` doesn't fail compilation when a pattern matching on it isn't exhaustive. I've heard that Scala 3 has fixed this counter-intuitive behaviour.
 2. Whenever we touch `Country.Value`, we need to bring the implicit `CountryColumnType` into scope.
 
-Number 1 is a huge coding trap, and Number 2 is a verbosity problem.
+Number 1 is a huge coding trap, and Number 2 is a mild verbosity problem.
 
 In this blog, I want to propose a better way to solve each of these two issues.
 
