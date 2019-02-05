@@ -142,7 +142,6 @@ object Country extends framework.Enum {
 Then, we can make a `PostgresProfile` that works with all subclasses of `EnumValue` as shown below:
 
 ```
-
 object OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
 
   class API extends super.API {
