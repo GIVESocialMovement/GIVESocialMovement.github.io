@@ -161,4 +161,4 @@ object OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
 
 Now you can easily add a new Slick-compatible Enum with minimal code.
 
-PS. We're always looking for a better technique. If you have one, please open an issue in our github repo. Thank you!
+PS. We're always looking for a better technique that makes the code more concise and elegant. If you have an idea, please open an issue in our github repo. Thank you!
