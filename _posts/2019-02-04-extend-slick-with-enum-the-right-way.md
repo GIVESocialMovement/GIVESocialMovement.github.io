@@ -57,7 +57,7 @@ A `sealed` type triggers compilation failure when a pattern matching on it isn't
 
 We want to utilize a `sealed` type while maintaining the `withName` and `toString` method of `scala.Enumeration`.
 
-and, obviously, with Scala's super power, we can achieve that in a concise way. Here's how we can achieve it:
+And, obviously, with Scala's super power, we can achieve that in a concise way. Here's how we can achieve it:
 
 ```
 object Country {
@@ -96,12 +96,12 @@ trait OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
 object OurExtendedPostgresProfile extends OurExtendedPostgresProfile
 ```
 
-Then, in places where we import `slick.jdbc.PostgresProfile.api._`, we instead import `OurExtendedPostgresProfile`. And that's it.
+Then, in places where we import `slick.jdbc.PostgresProfile.api._`, we instead import `OurExtendedPostgresProfile.api._`. And that's it.
 
 
 ## Make Slick work with all Enums
 
-As we all know, Scala system is powerful and safe at the same time. It should be possible to make Slick work with all possibly defined Enums. Here's how we do it:
+As we all know, Scala system is powerful and safe at the same time. It should be possible to make Slick work with all  defined Enums. Here's how we do it:
 
 First, we define base classes for all Enums:
 
@@ -161,4 +161,4 @@ object OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
 
 Now you can easily add a new Slick-compatible Enum with minimal code.
 
-PS. We're always looking for a better technique that makes the code more concise and elegant. If you have an idea, please open an issue in our github repo. Thank you!
+PS. We're always looking for an improvement that makes the code more concise and elegant. If you have an idea, please open an issue in our github repo to start a discussion. Thank you!
