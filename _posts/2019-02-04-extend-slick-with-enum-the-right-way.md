@@ -98,7 +98,8 @@ trait OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
   override val api: API = new API
 }
 
-// Please note that we need to make a trait first. I'm not exactly sure why. If not, we would encounter an AbstractMethodError.
+// Please note that we need to make a trait first. Otherwise, we would encounter an AbstractMethodError.
+// See: https://github.com/tminglei/slick-pg/issues/367
 object OurExtendedPostgresProfile extends OurExtendedPostgresProfile
 ```
 
