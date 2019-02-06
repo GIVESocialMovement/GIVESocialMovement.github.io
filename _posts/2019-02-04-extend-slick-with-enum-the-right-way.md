@@ -99,7 +99,7 @@ trait OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
 }
 
 // Please note that we need to make a trait first. Otherwise, we would encounter an AbstractMethodError.
-// See: https://github.com/tminglei/slick-pg/issues/367
+// See why: https://github.com/tminglei/slick-pg/issues/367
 object OurExtendedPostgresProfile extends OurExtendedPostgresProfile
 ```
 
