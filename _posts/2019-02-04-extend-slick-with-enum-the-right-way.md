@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "A better way to extend Scala's Slick, and the right way to make Enum"
+title: "Using sealed classes as Enum and make it work with Slick"
 date: 2019-02-04
 author:
   name: "@tanin"
@@ -117,7 +117,7 @@ package framework
 import scala.reflect.runtime.universe._
 
 object Enum {
-  def withName[T <: Enum#Value](s: String)(implicit tt: TypeTag[T]): T = {
+  def withName[T <: Enum#EnumValue](s: String)(implicit tt: TypeTag[T]): T = {
     val symbol = typeOf[T].typeSymbol.asClass.knownDirectSubclasses.find(_.name.decodedName.toString == s).get
     val module = reflect.runtime.currentMirror.staticModule(symbol.fullName)
     reflect.runtime.currentMirror.reflectModule(module).instance.asInstanceOf[T]
@@ -135,8 +135,6 @@ class Enum {
     }
 
     override def toString: String = name
-    // The below will be used in Slick's WHERE clause. I can't figure out a way around it.
-    def asValue: Value = this.asInstanceOf[Value]
   }
 
   def withName(s: String)(implicit tt: TypeTag[Value]): Value = Enum.withName[Value](s)
@@ -160,42 +158,26 @@ object OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
 
   class API extends super.API {
 
-    implicit def baseEnumMapper[T <: framework.Enum#Value](
+    implicit def baseEnumMapper[T <: framework.Enum#EnumValue](
       implicit tt: reflect.runtime.universe.TypeTag[T],
       clazz: ClassTag[T]
     ): BaseColumnType[T] = {
       MappedJdbcType.base[T, String](tmap = _.toString(), tcomap = Enum.withName(_)(tt))
     }
 
+    // See why we need the below here: https://github.com/slick/slick/issues/1986
+    implicit def getOptionMapper2TT[B1, B2 <: framework.Enum#Value : BaseTypedType, P2 <: B2, BR] = OptionMapper2.plain.asInstanceOf[OptionMapper2[B1, B2, BR, B1, P2, BR]]
+    implicit def getOptionMapper2TO[B1, B2 <: framework.Enum#Value : BaseTypedType, P2 <: B2, BR] = OptionMapper2.option.asInstanceOf[OptionMapper2[B1, B2, BR, B1, Option[P2], Option[BR]]]
+    implicit def getOptionMapper2OT[B1, B2 <: framework.Enum#Value : BaseTypedType, P2 <: B2, BR] = OptionMapper2.option.asInstanceOf[OptionMapper2[B1, B2, BR, Option[B1], P2,Option[BR]]]
+    implicit def getOptionMapper2OO[B1, B2 <: framework.Enum#Value : BaseTypedType, P2 <: B2, BR] = OptionMapper2.option.asInstanceOf[OptionMapper2[B1, B2, BR, Option[B1], Option[P2], Option[BR]]]
   }
 
   override val api: API = new API
 }
 ```
 
-Now you can easily add a new Slick-compatible Enum with minimal code.
+Special thanks to @hvesalai for pointing out what we need in https://github.com/slick/slick/issues/1986
 
-However, there is one wart that I don't like. We need to cast the type of an enum value to its super class when we use the enum column in a WHERE clause like below:
-
-```
-@Singleton
-class CampaignService @Inject()(
-  val dbConfigProvider: DatabaseConfigProvider,
-)(
-  implicit ec: ExecutionContext,
-) extends HasDatabaseConfigProvider[JdbcProfile] {
-
-  import OurExtendedPostgresProfile.api._
-
-  val query = TableQuery[CampaignTable]
-
-  ...
-  query
-    .filter { q => q.country === Country.Thailand.asValue }
-    // we need to invoke `value` (defined as a def in EnumValue above) in order to cast it to `Country.Value`.
-  ...
-```
-
-I've opened [an issue on Github](https://github.com/slick/slick/issues/1986) to the Slick team to see how we can make this better.
+And now you can easily add a new Slick-compatible Enum with minimal code.
 
 PS. We're always looking for an improvement that makes the code more concise and elegant. If you have an idea, please open an issue in our github repo to start a discussion. Thank you!
