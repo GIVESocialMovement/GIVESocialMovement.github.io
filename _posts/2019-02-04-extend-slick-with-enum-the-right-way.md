@@ -175,10 +175,9 @@ object OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
 
 Now you can easily add a new Slick-compatible Enum with minimal code.
 
-However, there is one wart that I don't like. We need to cast the type of an enum value to its super class whehen we use this column in a where clause like below:
+However, there is one wart that I don't like. We need to cast the type of an enum value to its super class when we use the enum column in a WHERE clause like below:
 
 ```
-
 @Singleton
 class CampaignService @Inject()(
   val dbConfigProvider: DatabaseConfigProvider,
@@ -192,7 +191,8 @@ class CampaignService @Inject()(
 
   ...
   query
-    .filter { q => q.country === Country.Thailand.value } // we need to invoke `value` (defined as a def in EnumValue) in order to cast it to `Country.Value`.
+    .filter { q => q.country === Country.Thailand.value }
+    // we need to invoke `value` (defined as a def in EnumValue above) in order to cast it to `Country.Value`.
   ...
 ```
 
