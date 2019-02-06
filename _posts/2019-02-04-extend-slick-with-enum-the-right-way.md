@@ -135,8 +135,8 @@ class Enum {
     }
 
     override def toString: String = name
-    // The below will be used in Slick's filter (or where) clause. I can't figure out a way around it.
-    def value: Value = this.asInstanceOf[Value]
+    // The below will be used in Slick's WHERE clause. I can't figure out a way around it.
+    def asValue: Value = this.asInstanceOf[Value]
   }
 
   def withName(s: String)(implicit tt: TypeTag[Value]): Value = Enum.withName[Value](s)
@@ -191,7 +191,7 @@ class CampaignService @Inject()(
 
   ...
   query
-    .filter { q => q.country === Country.Thailand.value }
+    .filter { q => q.country === Country.Thailand.asValue }
     // we need to invoke `value` (defined as a def in EnumValue above) in order to cast it to `Country.Value`.
   ...
 ```
