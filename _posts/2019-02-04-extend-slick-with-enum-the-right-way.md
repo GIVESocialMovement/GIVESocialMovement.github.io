@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Using sealed classes as Enum and make it work with Slick"
+title: "Use sealed type as Enum and make it work with Slick"
 date: 2019-02-04
 author:
   name: "@tanin"
