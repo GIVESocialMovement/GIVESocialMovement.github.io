@@ -7,7 +7,7 @@ author:
   url: https://twitter.com/tanin
 ---
 
-Since the inception of our Playframework system in Scala, we used `scala.Enumeration` with [Slick](https://github.com/slick/slick). Here was how we did it:
+Since the inception of our Playframework system in Scala, we used `scala.Enumeration` with [Slick](https://github.com/slick/slick). We translate an enum to string (using `toString`) when storing it in the database. Here was how we did it:
 
 ```
 import slick.jdbc.PostgresProfile.api._
