@@ -37,7 +37,7 @@ class CampaignTable(tag: Tag) extends Table[Campaign](tag, "campaigns") {
     ...
     country,
     ...
-  ) <> ((Country.apply _).tupled, Country.unapply)
+  ) <> ((Campaign.apply _).tupled, Campaign.unapply)
 }
 ```
 
@@ -62,7 +62,13 @@ And, obviously, with Scala's super power, we can achieve that in a concise way. 
 ```
 object Country {
   sealed abstract class Value {
-    override def toString = getClass.getSimpleName.stripSuffix("$")
+    val name: String = {
+      // Note that we cannot use getSimpleName/getCanonicalName because it would raise "Malformed class name".
+      val n = getClass.getName.stripSuffix("$")
+      n.split("\\.").last.split("\\$").last
+    }
+
+    override def toString: String = name
   }
   object Thailand extends Value
   object Singapore extends Value
@@ -111,19 +117,27 @@ package framework
 import scala.reflect.runtime.universe._
 
 object Enum {
-  def withName[T <: EnumValue](s: String)(implicit tt: TypeTag[T]): T = {
+  def withName[T <: Enum#Value](s: String)(implicit tt: TypeTag[T]): T = {
     val symbol = typeOf[T].typeSymbol.asClass.knownDirectSubclasses.find(_.name.decodedName.toString == s).get
     val module = reflect.runtime.currentMirror.staticModule(symbol.fullName)
     reflect.runtime.currentMirror.reflectModule(module).instance.asInstanceOf[T]
   }
 }
 
-abstract class EnumValue {
-  override def toString: String = getClass.getSimpleName.stripSuffix("$")
-}
-
 class Enum {
   type Value <: EnumValue
+
+  protected[this] abstract class EnumValue {
+    val name: String = {
+      // Note that we cannot use getSimpleName/getCanonicalName because it would raise "Malformed class name".
+      val n = getClass.getName.stripSuffix("$")
+      n.split("\\.").last.split("\\$").last
+    }
+
+    override def toString: String = name
+    // The below will be used in Slick's filter (or where) clause. I can't figure out a way around it.
+    def value: Value = this.asInstanceOf[Value]
+  }
 
   def withName(s: String)(implicit tt: TypeTag[Value]): Value = Enum.withName[Value](s)
 }
@@ -133,7 +147,7 @@ With the defined base classes, the `Country` enum becomes:
 
 ```
 object Country extends framework.Enum {
-  sealed abstract class Value extends framework.EnumValue
+  sealed abstract class Value extends EnumValue
   object Thailand extends Value
   object Singapore extends Value
 }
@@ -146,7 +160,7 @@ object OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
 
   class API extends super.API {
 
-    implicit def baseEnumMapper[T <: framework.EnumValue](
+    implicit def baseEnumMapper[T <: framework.Enum#Value](
       implicit tt: reflect.runtime.universe.TypeTag[T],
       clazz: ClassTag[T]
     ): BaseColumnType[T] = {
@@ -160,5 +174,28 @@ object OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
 ```
 
 Now you can easily add a new Slick-compatible Enum with minimal code.
+
+However, there is one wart that I don't like. We need to cast the type of an enum value to its super class whehen we use this column in a where clause like below:
+
+```
+
+@Singleton
+class CampaignService @Inject()(
+  val dbConfigProvider: DatabaseConfigProvider,
+)(
+  implicit ec: ExecutionContext,
+) extends HasDatabaseConfigProvider[JdbcProfile] {
+
+  import OurExtendedPostgresProfile.api._
+
+  val query = TableQuery[CampaignTable]
+
+  ...
+  query
+    .filter { q => q.country === Country.Thailand.value } // we need to invoke `value` (defined as a def in EnumValue) in order to cast it to `Country.Value`.
+  ...
+```
+
+I've opened [an issue on Github](https://github.com/slick/slick/issues/1986) to the Slick team to see how we can make this better.
 
 PS. We're always looking for an improvement that makes the code more concise and elegant. If you have an idea, please open an issue in our github repo to start a discussion. Thank you!
