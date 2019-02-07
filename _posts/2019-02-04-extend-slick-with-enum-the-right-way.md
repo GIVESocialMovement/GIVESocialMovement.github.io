@@ -77,8 +77,8 @@ object Country {
     import scala.reflect.runtime.universe._
 
     val symbol = typeOf[Value].typeSymbol.asClass.knownDirectSubclasses.find(_.name.decodedName.toString == s).get
-    val module = reflect.runtime.currentMirror.staticModule(symbol.fullName)
 
+    val module = reflect.runtime.currentMirror.staticModule(symbol.fullName)
     reflect.runtime.currentMirror.reflectModule(module).instance.asInstanceOf[Value]
   }
 }
@@ -119,7 +119,13 @@ import scala.reflect.runtime.universe._
 
 object Enum {
   def withName[T <: Enum#EnumValue](s: String)(implicit tt: TypeTag[T]): T = {
-    val symbol = typeOf[T].typeSymbol.asClass.knownDirectSubclasses.find(_.name.decodedName.toString == s).get
+    val symbol = typeOf[T].typeSymbol.asClass.knownDirectSubclasses.find(_.name.decodedName.toString == s).get  
+    
+    // Ensure parent is initialized because accessing its members.
+    // Otherwise, some EnumValues might be null.
+    val parent = reflect.runtime.currentMirror.staticModule(symbol.owner.fullName)
+    reflect.runtime.currentMirror.reflectModule(parent).instance
+    
     val module = reflect.runtime.currentMirror.staticModule(symbol.fullName)
     reflect.runtime.currentMirror.reflectModule(module).instance.asInstanceOf[T]
   }
