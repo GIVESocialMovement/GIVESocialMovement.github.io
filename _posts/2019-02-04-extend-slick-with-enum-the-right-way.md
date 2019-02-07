@@ -123,7 +123,7 @@ object Enum {
     
     // Ensure parent is initialized before accessing its members.
     // Otherwise, some EnumValues might be null.
-    // This makes me doubt whether I should have used macros instead.
+    // See the discussion: https://www.reddit.com/r/scala/comments/akmvfg/got_a_quick_question_ask_here_january_28_2019/efwrt73/
     val parent = reflect.runtime.currentMirror.staticModule(symbol.owner.fullName)
     reflect.runtime.currentMirror.reflectModule(parent).instance
     
