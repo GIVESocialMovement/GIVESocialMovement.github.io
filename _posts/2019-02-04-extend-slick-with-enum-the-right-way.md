@@ -121,8 +121,9 @@ object Enum {
   def withName[T <: Enum#EnumValue](s: String)(implicit tt: TypeTag[T]): T = {
     val symbol = typeOf[T].typeSymbol.asClass.knownDirectSubclasses.find(_.name.decodedName.toString == s).get  
     
-    // Ensure parent is initialized because accessing its members.
+    // Ensure parent is initialized before accessing its members.
     // Otherwise, some EnumValues might be null.
+    // This makes me doubt whether I should have used macros instead.
     val parent = reflect.runtime.currentMirror.staticModule(symbol.owner.fullName)
     reflect.runtime.currentMirror.reflectModule(parent).instance
     
