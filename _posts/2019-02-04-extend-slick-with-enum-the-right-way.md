@@ -62,7 +62,7 @@ And, obviously, with Scala's super power, we can achieve that in a concise way. 
 ```
 object Country {
   sealed abstract class Value {
-    val name: String = {
+    lazy val name: String = {
       // Note that we cannot use getSimpleName/getCanonicalName because it would raise "Malformed class name".
       val n = getClass.getName.stripSuffix("$")
       n.split("\\.").last.split("\\$").last
@@ -129,7 +129,7 @@ class Enum {
   type Value <: EnumValue
 
   protected[this] abstract class EnumValue {
-    val name: String = {
+    lazy val name: String = {
       // Note that we cannot use getSimpleName/getCanonicalName because it would raise "Malformed class name".
       val n = getClass.getName.stripSuffix("$")
       n.split("\\.").last.split("\\$").last
