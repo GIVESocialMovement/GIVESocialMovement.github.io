@@ -118,33 +118,27 @@ package framework
 import scala.reflect.runtime.universe._
 
 object Enum {
-  def withName[T <: Enum#EnumValue](s: String)(implicit tt: TypeTag[T]): T = {
-    val symbol = typeOf[T].typeSymbol.asClass.knownDirectSubclasses.find(_.name.decodedName.toString == s).get  
-    
-    // Ensure parent is initialized before accessing its members.
-    // Otherwise, some EnumValues might be null.
-    // See the discussion: https://www.reddit.com/r/scala/comments/akmvfg/got_a_quick_question_ask_here_january_28_2019/efwrt73/
-    val parent = reflect.runtime.currentMirror.staticModule(symbol.owner.fullName)
-    reflect.runtime.currentMirror.reflectModule(parent).instance
-    
+  def withName[T <: EnumValue](s: String)(implicit tt: TypeTag[T]): T = {
+    val symbol = typeOf[T].typeSymbol.asClass.knownDirectSubclasses.find(_.name.decodedName.toString == s).getOrElse { throw new NoSuchElementException() }  
     val module = reflect.runtime.currentMirror.staticModule(symbol.fullName)
     reflect.runtime.currentMirror.reflectModule(module).instance.asInstanceOf[T]
   }
 }
 
-class Enum {
-  type Value <: EnumValue
-
-  protected[this] abstract class EnumValue {
-    lazy val name: String = {
-      // Note that we cannot use getSimpleName/getCanonicalName because it would raise "Malformed class name".
-      val n = getClass.getName.stripSuffix("$")
-      n.split("\\.").last.split("\\$").last
-    }
-
-    override def toString: String = name
+// EnumValue cannot be an inner class of Enum. Otherwise, we would encounter this bug:
+// https://www.reddit.com/r/scala/comments/akmvfg/got_a_quick_question_ask_here_january_28_2019/efytdrl/
+abstract class EnumValue {
+  lazy val name: String = {
+    // Note that we cannot use getSimpleName/getCanonicalName because it would raise "Malformed class name".
+    val n = getClass.getName.stripSuffix("$")
+    n.split("\\.").last.split("\\$").last
   }
 
+  override def toString: String = name
+}
+
+class Enum {
+  type Value <: EnumValue
   def withName(s: String)(implicit tt: TypeTag[Value]): Value = Enum.withName[Value](s)
 }
 ```
@@ -166,7 +160,7 @@ object OurExtendedPostgresProfile extends slick.jdbc.PostgresProfile {
 
   class API extends super.API {
 
-    implicit def baseEnumMapper[T <: framework.Enum#EnumValue](
+    implicit def baseEnumMapper[T <: framework.EnumValue](
       implicit tt: reflect.runtime.universe.TypeTag[T],
       clazz: ClassTag[T]
     ): BaseColumnType[T] = {
